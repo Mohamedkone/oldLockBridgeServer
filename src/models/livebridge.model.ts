@@ -62,6 +62,26 @@ export class Livebridge extends Entity {
   security: number;
   
   @property({
+    type: 'any',
+  })
+  pass?: string | null;
+  
+  @property({
+    type: 'string',
+  })
+  encryptionType?: string;
+  
+  @property({
+    type: 'string',
+  })
+  keyDerivationMethod?: string;
+  
+  @property({
+    type: 'number',
+  })
+  keyVersion?: number;
+  
+  @property({
     type: 'boolean',
     required: true,
   })

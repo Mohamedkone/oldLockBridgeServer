@@ -115,23 +115,33 @@ export class LivebridgeController {
     return this.livebridgeRepository.count(where);
   }
 
-  @get('/livebridges')
-  @response(200, {
-    description: 'Array of Livebridge model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Livebridge, {includeRelations: true}),
-        },
+  @get('/livebridges/all/{userId}')
+@response(200, {
+  description: 'Array of Livebridge model instances',
+  content: {
+    'application/json': {
+      schema: {
+        type: 'array',
+        items: getModelSchemaRef(Livebridge, {includeRelations: true}),
       },
     },
-  })
-  async find(
-    @param.filter(Livebridge) filter?: Filter<Livebridge>,
-  ): Promise<Livebridge[]> {
-    return this.livebridgeRepository.find(filter);
-  }
+  },
+})
+async find(
+   @param.path.string('userId') userId: string,
+  @param.filter(Livebridge) filter?: Filter<Livebridge>,
+): Promise<Livebridge[]> {
+  // Merge the user filter with any existing filters
+  const userFilter = {
+    ...filter,
+    where: {
+      ...filter?.where,
+      ownerId: userId
+    }
+  };
+  
+  return this.livebridgeRepository.find(userFilter);
+}
 
   @patch('/livebridges')
   @response(200, {

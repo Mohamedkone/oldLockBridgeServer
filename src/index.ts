@@ -29,7 +29,7 @@ export async function main(options: ApplicationConfig = {}) {
   // const server = http.createServer(app.requestHandler)
   const io = new socketIo.Server(httpServer,{
     cors: {
-      origin: ["http://localhost:3000", "http://localhost:5173", "https://app.lockbridge.io", "https://dev.lockbridge.io"],
+      origin: ["http://localhost:3000", "http://localhost:3002", "http://localhost:5173", "https://app.lockbridge.io", "https://dev.lockbridge.io"],
       methods: ["GET", "POST"]
     }
   })
@@ -71,7 +71,7 @@ if (require.main === module) {
         disabled: true, //for production
       },
       cors:{
-        origin:["http://localhost:3000", "https://app.lockbridge.io","http://localhost:5173","http://localhost:5174", "https://dev.lockbridge.io", "http://localhost:3002", "http://localhost:9000", "https://nodes0413.lockbridge.io", "http://localhost:5173", "https://onboarding.lockbridge.io"],
+        origin:["http://localhost:3000", "http://localhost:3002", "https://app.lockbridge.io","http://localhost:5173","http://localhost:5174", "https://dev.lockbridge.io", "http://localhost:3002", "http://localhost:9000", "https://nodes0413.lockbridge.io", "http://localhost:5173", "https://onboarding.lockbridge.io"],
         credentials: true,
         methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
         headers: '*',
