@@ -15,6 +15,13 @@ export class Company extends Entity {
     required: true,
   })
   name: string;
+ 
+  @property({
+    type: 'boolean',
+    required: true,
+    default: true,
+  })
+  isPersonal: boolean;
 
   @property({
     type: 'date',

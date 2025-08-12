@@ -20,6 +20,8 @@ import {
 import {v4 as uuidv4} from 'uuid';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
+import { inject } from '@loopback/core';
+import { CompanyController } from './company.controller';
 
 const redisDb = require('../datasources/redis.datasource')
 const client = redisDb.client
@@ -28,6 +30,8 @@ const jwt = require('jsonwebtoken')
 
 export class UsersController {
   constructor(
+    @inject('controllers.CompanyController')
+    private companyCont: CompanyController,
     @repository(UsersRepository)
     public usersRepository: UsersRepository,
   ) { }
@@ -141,7 +145,15 @@ export class UsersController {
   async findSub(
     @param.path.string('sub') sub: string
   ): Promise<Users | null> {
-    return this.usersRepository.findOne({where: {sub}});
+    const res = this.usersRepository.findOne({where: {sub}});
+    if(res === null){
+      return null
+    }
+    else{
+      // const res2 = this.companyCont.find({where:{}})
+      console.log(res)
+      return res
+    }
   }
   @get('/users/logO/{subOAuth}')
   @response(200, {
@@ -154,8 +166,15 @@ export class UsersController {
   })
   async findSubAuth(
     @param.path.string('subOAuth') subOAuth: string
-  ): Promise<Users | null> {
-    return this.usersRepository.findOne({where: {subOAuth}});
+  ): Promise<any | null> {
+    const res= await this.usersRepository.findOne({where: {subOAuth}});
+    if(res === null){
+      return null
+    }
+    else{
+      const res2 = await this.companyCont.findById(res.company)
+      return {...res, isPersonal: res2.isPersonal}
+    }
   }
   @get('/users/email/{email}')
   @response(200, {

@@ -3,6 +3,7 @@ import {
   CountSchema,
   Filter,
   FilterExcludingWhere,
+  Options,
   repository,
   Where,
 } from '@loopback/repository';
@@ -22,11 +23,17 @@ import {GuestInviteRepository} from '../repositories';
 import { HttpErrors } from '@loopback/rest';
 import {inject} from '@loopback/core';
 import {RoomsController} from './rooms.controller';
+import { UsersController } from './users.controller';
+import { RoomInviteController } from './room-invite.controller';
 
 export class GuestInviteController {
   constructor(
     @inject('controllers.RoomsController')
     private roomRepository : RoomsController,
+    @inject('controllers.RoomInviteController')
+    private RoomInviteCont : RoomInviteController,
+    @inject('controllers.UsersController')
+    private usersCont: UsersController,
     @repository(GuestInviteRepository)
     public guestInviteRepository : GuestInviteRepository,
   ) {}
@@ -48,13 +55,37 @@ export class GuestInviteController {
       },
     })
     guestInvite: Omit<GuestInvite, 'id'>,
-  ): Promise<GuestInvite> {
+  ): Promise<Boolean> {
     const roomSettings = await this.roomRepository.findById(guestInvite.key)
     if(roomSettings.roomAccess === 2){
       throw HttpErrors.Unauthorized('You can not invite any guest to this room')
     }
     try {
-      return await this.guestInviteRepository.create(guestInvite);
+      const exist = await this.usersCont.findEmail(guestInvite.userId)
+      if(exist?.id){
+         await this.RoomInviteCont.create({
+           key: guestInvite.key,
+           name: guestInvite.name,
+           type: guestInvite.type,
+           userId: exist?.id,
+           getId: function () {
+             throw new Error('Function not implemented.');
+           },
+           getIdObject: function (): Object {
+             throw new Error('Function not implemented.');
+           },
+           toJSON: function (): Object {
+             throw new Error('Function not implemented.');
+           },
+           toObject: function (options?: Options): Object {
+             throw new Error('Function not implemented.');
+           }
+         });
+        return true
+      }else{
+        await this.guestInviteRepository.create(guestInvite);
+        return  true
+      }
     } catch (error) {
       // Check if the error is the specific one thrown by the trigger
       if (error.code === 'ER_SIGNAL_EXCEPTION' && error.message.includes('A record with the same key and userId already exists')) {

@@ -200,6 +200,7 @@ export const roomHandler = (socket: Socket, roomRepo: RoomsRepository, roomInvRe
       await roomRepo.deleteById(roomId);
       await roomInvRepo.deleteAll({key: roomId});
       await guestInvRepo.deleteAll({key: roomId});
+      console.log(test)
       delete rooms[roomId];
       socket.to(roomId).emit("room-closed", {roomId});
       socket.emit("delete-closed", {roomId});

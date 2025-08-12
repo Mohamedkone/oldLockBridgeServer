@@ -161,10 +161,11 @@ export class GuestsController {
   async findByEmail(
     @param.path.string('email') email: string,
     @param.filter(Guests, {exclude: 'where'}) filter?: FilterExcludingWhere<Guests>
-  ): Promise<Guests> {
+  ): Promise<Guests | null> {
     const guest = await this.guestsRepository.findOne({where: {email: email}, ...filter});
     if (!guest) {
-      throw new Error(`Entity not found: Guests with email "${email}"`);
+      // throw new Error(`Entity not found: Guests with email "${email}"`);
+      return null
     }
     return guest;
   }

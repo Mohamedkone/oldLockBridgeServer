@@ -47,10 +47,10 @@ export class CompanyController {
     company: Company,
   ): Promise<Company> {
     const existingCompWithEmail = await this.companyRepository.findOne({
-      where: {email: company.email},
+      where: {email: company?.email},
     });
     const existingCompWithName = await this.companyRepository.findOne({
-      where: {name: company.name},
+      where: {name: company?.name},
     });
 
     if (existingCompWithEmail) {

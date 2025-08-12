@@ -1,10 +1,9 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig, asGlobalInterceptor} from '@loopback/core';
+import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 // import path from 'path';
-import {CookieCheckInterceptor} from './middleware/cookie-check.middleware';
 import {MySequence} from './sequence';
 
 
@@ -24,8 +23,7 @@ export class BackEndApplication extends BootMixin(
 
 
 
-    this.bind('interceptors.CookieCheckInterceptor').toProvider(CookieCheckInterceptor).apply(asGlobalInterceptor());
-        this.projectRoot = __dirname;
+    this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
       controllers: {

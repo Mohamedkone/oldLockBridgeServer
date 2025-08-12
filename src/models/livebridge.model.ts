@@ -64,7 +64,7 @@ export class Livebridge extends Entity {
   @property({
     type: 'any',
   })
-  pass?: string | null;
+  key?: string | null;
   
   @property({
     type: 'string',

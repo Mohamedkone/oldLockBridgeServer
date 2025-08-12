@@ -202,6 +202,7 @@ async find(
               security:bridgeLink.security,
               storageId:bridgeLink.storageId,
               system: bridgeLink.storageType,
+              key: bridgeLink.key? bridgeLink.key : null
             }, 
           owner: `${owner.fname} ${owner.lname}`,
           
